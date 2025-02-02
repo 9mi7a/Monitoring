@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Monitoring.Migrations
 {
     [DbContext(typeof(MonitoringDbContext))]
-    partial class MonitoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250128152137_AuthMigration")]
+    partial class AuthMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,57 +220,6 @@ namespace Monitoring.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Monitoring.Models.Analytics", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("WebsiteId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WebsiteId");
-
-                    b.ToTable("Analytics");
-                });
-
-            modelBuilder.Entity("Monitoring.Models.CheckResults", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnalyticsId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CheckTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ErrorMessage")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ResponseTime")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnalyticsId");
-
-                    b.ToTable("CheckResults");
-                });
-
             modelBuilder.Entity("Monitoring.Models.Client", b =>
                 {
                     b.Property<int>("Id")
@@ -424,28 +376,6 @@ namespace Monitoring.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Monitoring.Models.Analytics", b =>
-                {
-                    b.HasOne("Monitoring.Models.Website", "Website")
-                        .WithMany()
-                        .HasForeignKey("WebsiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Website");
-                });
-
-            modelBuilder.Entity("Monitoring.Models.CheckResults", b =>
-                {
-                    b.HasOne("Monitoring.Models.Analytics", "Analytics")
-                        .WithMany("CheckResults")
-                        .HasForeignKey("AnalyticsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Analytics");
-                });
-
             modelBuilder.Entity("Monitoring.Models.NotificationsModule.NotificationPreferences", b =>
                 {
                     b.HasOne("Monitoring.Models.Client", null)
@@ -464,11 +394,6 @@ namespace Monitoring.Migrations
                         .IsRequired();
 
                     b.Navigation("Client");
-                });
-
-            modelBuilder.Entity("Monitoring.Models.Analytics", b =>
-                {
-                    b.Navigation("CheckResults");
                 });
 
             modelBuilder.Entity("Monitoring.Models.Client", b =>
